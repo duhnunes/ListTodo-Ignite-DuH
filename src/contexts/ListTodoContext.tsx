@@ -51,19 +51,20 @@ export const AddTodoContext = createContext({} as ListTodoContextType)
 export function AddTodoProvider({ children }: ListTodoContextProps) {
   const [inputValue, setInputValue] = useState('')
   const [countCharacter, setCountCharacter] = useState(0)
+
   const maxCharacter = 1000
   const halfCharacter = maxCharacter / 2
   const almostMaxCharacter = Math.floor(
-    (maxCharacter * halfCharacter) / (22 * 28.4),
+    (maxCharacter * halfCharacter) / (22 * 28.4), // Essa foi uma conta maluca que eu fiz para chegar no valor próximo a 800 utilizando 1000 como máximo de characters
   )
+
+  const localStorageName = '@ignite-duh-todo:task-state-1.1.1'
 
   const [listTodo, dispatch] = useReducer(
     todoListReducer,
     [],
     (initialState) => {
-      const storedStateAsJSON = localStorage.getItem(
-        '@ignite-duh-todo:task-state-1.0.0',
-      )
+      const storedStateAsJSON = localStorage.getItem(localStorageName)
 
       if (storedStateAsJSON) {
         return JSON.parse(storedStateAsJSON)
@@ -76,7 +77,7 @@ export function AddTodoProvider({ children }: ListTodoContextProps) {
   useEffect(() => {
     const stateJSON = JSON.stringify(listTodo)
 
-    localStorage.setItem('@ignite-duh-todo:task-state-1.0.0', stateJSON)
+    localStorage.setItem(localStorageName, stateJSON)
   }, [listTodo])
 
   function createNewTask(data: CreateAddTodoData) {
